@@ -6,22 +6,22 @@ import os
 class serial():
 
     def __init__(self):
-        self.parts=list_ports.comports()
+        self.ports=list_ports.comports()
         self.run()
         
 
     def get_serial_ports(self):
         while True:
             ports = list_ports.comports()
-            for port in self.parts:
+            for port in self.ports:
                 if(port not in ports):
-                    self.parts.remove(port)
+                    self.ports.remove(port)
                     self.show_ports()
                     print("Device removed : " + str(port))
 
             for port in ports:
-                if(port not in self.parts):
-                    self.parts.append(port)
+                if(port not in self.ports):
+                    self.ports.append(port)
                     self.show_ports()
                     print("New device : " + str(port))
 
@@ -32,10 +32,18 @@ class serial():
 
     def show_ports(self):
         os.system("cls")
-        print("Total " + str(len(self.parts))+" devices")
+        print("Total " + str(len(self.ports))+" devices")
+        l=[]
+        for port in self.ports:
+            string=port.device
+            string=string.replace("COM","")
+            l.append(int(string))
+        l.sort()
         print("=====================================")
-        for port in self.parts:
-            print(port)
+        for i in l:
+            for port in self.ports:
+                if(port.device == "COM"+str(i)):
+                    print("COM"+str(i)+"\t"+port.description)
         print("=====================================")
 
 
