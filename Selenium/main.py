@@ -21,7 +21,7 @@ class driver:
     def __init__(self):
         options = webdriver.EdgeOptions()
         self.wd = webdriver.Edge(options=options)
-        self.wait = WebDriverWait(self.wd, 50, 0.2)
+        self.wait = WebDriverWait(self.wd,10,0.5)
         self.devices = readJson()
         self.run()
     
@@ -54,10 +54,12 @@ class driver:
         self.wd.get(url)
         time.sleep(5)
         xpath = '//*[@id="kibana-body"]/div/div/div/div[2]/div/div/div/discover-app/discover/div/main/div/div[3]/div/div/div[1]/div/div[1]/div/div[1]/div/strong'
-        element = self.wait.until(EC.presence_of_element_located(
-            (By.XPATH,xpath)))
-        offline_count = eval(element.text)
-        if(offline_count>1):
-            screenShot(f"{devicename}-离线{offline_count}次")
-
+        try:
+            element = self.wait.until(EC.presence_of_element_located(
+                (By.XPATH,xpath)))
+            offline_count = eval(element.text)
+            if(offline_count>1):
+                screenShot(f"{devicename}-离线{offline_count}次")
+        except:
+            print(f"device {devicename} is offline")
 d = driver()
